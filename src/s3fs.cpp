@@ -1112,7 +1112,7 @@ static int create_file_object(const char* path, mode_t mode, uid_t uid, gid_t gi
     meta["x-amz-meta-gid"]   = std::to_string(gid);
     meta["x-amz-meta-mode"]  = std::to_string(mode);
     meta["x-amz-meta-atime"] = strnow;
-    meta["x-amz-meta-ctime"] = strnow;
+    //meta["x-amz-meta-ctime"] = strnow;
     meta["x-amz-meta-mtime"] = strnow;
     meta["x-internal-meta-ctime"] = strnow;
 
@@ -1182,7 +1182,7 @@ static int s3fs_create(const char* _path, mode_t mode, struct fuse_file_info* fi
     meta["x-amz-meta-mode"]  = std::to_string(mode);
     meta["x-amz-meta-atime"] = strnow;
     meta["x-amz-meta-mtime"] = strnow;
-    meta["x-amz-meta-ctime"] = strnow;
+    //meta["x-amz-meta-ctime"] = strnow;
     meta["x-internal-meta-ctime"] = strnow;
     
 
@@ -1432,7 +1432,7 @@ static int s3fs_symlink(const char* _from, const char* _to)
     headers["Content-Type"]     = "application/octet-stream"; // Static
     headers["x-amz-meta-mode"]  = std::to_string(S_IFLNK | S_IRWXU | S_IRWXG | S_IRWXO);
     headers["x-amz-meta-atime"] = strnow;
-    headers["x-amz-meta-ctime"] = strnow;
+    //headers["x-amz-meta-ctime"] = strnow;
     headers["x-amz-meta-mtime"] = strnow;
     headers["x-amz-meta-uid"]   = std::to_string(pcxt->uid);
     headers["x-amz-meta-gid"]   = std::to_string(pcxt->gid);
@@ -2798,7 +2798,7 @@ static int s3fs_truncate(const char* _path, off_t size)
         std::string strnow       = s3fs_str_realtime();
         meta["Content-Type"]     = "application/octet-stream"; // Static
         meta["x-amz-meta-mode"]  = std::to_string(S_IFLNK | S_IRWXU | S_IRWXG | S_IRWXO);
-        //meta["x-amz-meta-ctime"] = strnow;
+        ////meta["x-amz-meta-ctime"] = strnow;
         meta["x-amz-meta-mtime"] = strnow;
         meta["x-amz-meta-uid"]   = std::to_string(pcxt->uid);
         meta["x-amz-meta-gid"]   = std::to_string(pcxt->gid);
@@ -3383,7 +3383,7 @@ static int readdir_multi_head(const char* path, const S3ObjList& head, void* buf
         dummy_header["x-amz-meta-gid"]   = std::to_string(is_s3fs_gid ? s3fs_gid : getegid());
         dummy_header["x-amz-meta-mode"]  = std::to_string(S_IFDIR | (~dirmask & (S_IRWXU | S_IRWXG | S_IRWXO)));
         dummy_header["x-amz-meta-atime"] = "0";
-        dummy_header["x-amz-meta-ctime"] = "0";
+        //dummy_header["x-amz-meta-ctime"] = "0";
         dummy_header["x-amz-meta-mtime"] = "0";
         dummy_header["x-internal-meta-ctime"] = "0";
 
