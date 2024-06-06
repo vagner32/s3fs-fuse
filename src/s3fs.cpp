@@ -1239,7 +1239,7 @@ static int create_directory_object(const char* path, mode_t mode, const struct t
     meta["x-amz-meta-mode"]  = std::to_string(mode);
     meta["x-amz-meta-atime"] = str(ts_atime);
     meta["x-amz-meta-mtime"] = str(ts_mtime);
-    meta["x-amz-meta-ctime"] = str(ts_ctime);
+    //meta["x-amz-meta-ctime"] = str(ts_ctime);
     meta["x-internal-meta-ctime"] = str(ts_ctime);
 
     if(pxattrvalue){
@@ -1986,7 +1986,7 @@ static int s3fs_chmod(const char* _path, mode_t mode)
         // normal object or directory object of newer version
         std::string strSourcePath              = (mount_prefix.empty() && "/" == strpath) ? "//" : strpath;
         headers_t   updatemeta;
-        updatemeta["x-amz-meta-ctime"]         = s3fs_str_realtime();
+        //updatemeta["x-amz-meta-ctime"]         = s3fs_str_realtime();
         updatemeta["x-amz-meta-mode"]          = std::to_string(mode);
         updatemeta["x-amz-copy-source"]        = urlEncodePath(service_path + S3fsCred::GetBucket() + get_realpath(strSourcePath.c_str()));
         updatemeta["x-amz-metadata-directive"] = "REPLACE";
@@ -2200,7 +2200,7 @@ static int s3fs_chown(const char* _path, uid_t uid, gid_t gid)
     }else{
         std::string strSourcePath              = (mount_prefix.empty() && "/" == strpath) ? "//" : strpath;
         headers_t   updatemeta;
-        updatemeta["x-amz-meta-ctime"]         = s3fs_str_realtime();
+        //updatemeta["x-amz-meta-ctime"]         = s3fs_str_realtime();
         updatemeta["x-amz-meta-uid"]           = std::to_string(uid);
         updatemeta["x-amz-meta-gid"]           = std::to_string(gid);
         updatemeta["x-amz-copy-source"]        = urlEncodePath(service_path + S3fsCred::GetBucket() + get_realpath(strSourcePath.c_str()));
@@ -2446,7 +2446,7 @@ static int update_mctime_parent_directory(const char* _path)
         std::string strSourcePath              = (mount_prefix.empty() && "/" == nowpath) ? "//" : nowpath;
         headers_t   updatemeta;
         updatemeta["x-amz-meta-mtime"]         = str(mctime);
-        updatemeta["x-amz-meta-ctime"]         = str(mctime);
+        //updatemeta["x-amz-meta-ctime"]         = str(mctime);
         updatemeta["x-amz-meta-atime"]         = str(atime);
         updatemeta["x-amz-copy-source"]        = urlEncodePath(service_path + S3fsCred::GetBucket() + get_realpath(strSourcePath.c_str()));
         updatemeta["x-amz-metadata-directive"] = "REPLACE";
@@ -2539,7 +2539,7 @@ static int s3fs_utimens(const char* _path, const struct timespec ts[2])
         std::string strSourcePath              = (mount_prefix.empty() && "/" == strpath) ? "//" : strpath;
         headers_t   updatemeta;
         updatemeta["x-amz-meta-mtime"]         = str(mtime);
-        updatemeta["x-amz-meta-ctime"]         = str(ctime);
+        //updatemeta["x-amz-meta-ctime"]         = str(ctime);
         updatemeta["x-amz-meta-atime"]         = str(atime);
         updatemeta["x-amz-copy-source"]        = urlEncodePath(service_path + S3fsCred::GetBucket() + get_realpath(strSourcePath.c_str()));
         updatemeta["x-amz-metadata-directive"] = "REPLACE";
@@ -3917,7 +3917,7 @@ static int s3fs_setxattr(const char* path, const char* name, const char* value, 
     // set xattr all object
     std::string strSourcePath              = (mount_prefix.empty() && "/" == strpath) ? "//" : strpath;
     headers_t   updatemeta;
-    updatemeta["x-amz-meta-ctime"]         = s3fs_str_realtime();
+    //updatemeta["x-amz-meta-ctime"]         = s3fs_str_realtime();
     updatemeta["x-amz-copy-source"]        = urlEncodePath(service_path + S3fsCred::GetBucket() + get_realpath(strSourcePath.c_str()));
     updatemeta["x-amz-metadata-directive"] = "REPLACE";
     updatemeta["x-internal-meta-ctime"]         = s3fs_str_realtime();
