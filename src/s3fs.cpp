@@ -664,6 +664,7 @@ static int get_object_attribute(const char* path, struct stat* pstbuf, headers_t
             (*pheader)["x-amz-meta-atime"] = std::to_string(pstat->st_atime);
             (*pheader)["x-amz-meta-ctime"] = std::to_string(pstat->st_ctime);
             (*pheader)["x-amz-meta-mtime"] = std::to_string(pstat->st_mtime);
+            (*pheader)["x-internal-meta-ctime"] = std::to_string(pstat->st_ctime);
 
             result = 0;
         }else{
@@ -1113,6 +1114,7 @@ static int create_file_object(const char* path, mode_t mode, uid_t uid, gid_t gi
     meta["x-amz-meta-atime"] = strnow;
     meta["x-amz-meta-ctime"] = strnow;
     meta["x-amz-meta-mtime"] = strnow;
+    meta["x-internal-meta-ctime"] = strnow;
 
     S3fsCurl s3fscurl(true);
     return s3fscurl.PutRequest(path, meta, -1);    // fd=-1 means for creating zero byte object.
@@ -1181,6 +1183,8 @@ static int s3fs_create(const char* _path, mode_t mode, struct fuse_file_info* fi
     meta["x-amz-meta-atime"] = strnow;
     meta["x-amz-meta-mtime"] = strnow;
     meta["x-amz-meta-ctime"] = strnow;
+    meta["x-internal-meta-ctime"] = strnow;
+    
 
     std::string xattrvalue;
     if(build_inherited_xattr_value(path, xattrvalue)){
@@ -1236,6 +1240,7 @@ static int create_directory_object(const char* path, mode_t mode, const struct t
     meta["x-amz-meta-atime"] = str(ts_atime);
     meta["x-amz-meta-mtime"] = str(ts_mtime);
     meta["x-amz-meta-ctime"] = str(ts_ctime);
+    meta["x-internal-meta-ctime"] = str(ts_ctime);
 
     if(pxattrvalue){
         S3FS_PRN_DBG("Set xattrs = %s", urlDecode(pxattrvalue).c_str());
@@ -1431,6 +1436,7 @@ static int s3fs_symlink(const char* _from, const char* _to)
     headers["x-amz-meta-mtime"] = strnow;
     headers["x-amz-meta-uid"]   = std::to_string(pcxt->uid);
     headers["x-amz-meta-gid"]   = std::to_string(pcxt->gid);
+    headers["x-internal-meta-ctime"] = strnow;
 
     // [NOTE]
     // Symbolic links do not set xattrs.
@@ -2795,6 +2801,7 @@ static int s3fs_truncate(const char* _path, off_t size)
         meta["x-amz-meta-mtime"] = strnow;
         meta["x-amz-meta-uid"]   = std::to_string(pcxt->uid);
         meta["x-amz-meta-gid"]   = std::to_string(pcxt->gid);
+        meta["x-internal-meta-ctime"] = strnow;
 
         if(nullptr == (ent = autoent.Open(path, &meta, size, S3FS_OMIT_TS, O_RDWR, true, true, false, AutoLock::NONE))){
             S3FS_PRN_ERR("could not open file(%s): errno=%d", path, errno);
