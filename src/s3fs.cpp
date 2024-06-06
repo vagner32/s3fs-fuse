@@ -662,7 +662,7 @@ static int get_object_attribute(const char* path, struct stat* pstbuf, headers_t
             (*pheader)["x-amz-meta-gid"]   = std::to_string(pstat->st_gid);
             (*pheader)["x-amz-meta-mode"]  = std::to_string(pstat->st_mode);
             (*pheader)["x-amz-meta-atime"] = std::to_string(pstat->st_atime);
-            (*pheader)["x-amz-meta-ctime"] = std::to_string(pstat->st_ctime);
+            //(*pheader)["x-amz-meta-ctime"] = std::to_string(pstat->st_ctime);
             (*pheader)["x-amz-meta-mtime"] = std::to_string(pstat->st_mtime);
             (*pheader)["x-internal-meta-ctime"] = std::to_string(pstat->st_ctime);
 
@@ -2798,7 +2798,7 @@ static int s3fs_truncate(const char* _path, off_t size)
         std::string strnow       = s3fs_str_realtime();
         meta["Content-Type"]     = "application/octet-stream"; // Static
         meta["x-amz-meta-mode"]  = std::to_string(S_IFLNK | S_IRWXU | S_IRWXG | S_IRWXO);
-        meta["x-amz-meta-ctime"] = strnow;
+        //meta["x-amz-meta-ctime"] = strnow;
         meta["x-amz-meta-mtime"] = strnow;
         meta["x-amz-meta-uid"]   = std::to_string(pcxt->uid);
         meta["x-amz-meta-gid"]   = std::to_string(pcxt->gid);
@@ -3385,6 +3385,7 @@ static int readdir_multi_head(const char* path, const S3ObjList& head, void* buf
         dummy_header["x-amz-meta-atime"] = "0";
         dummy_header["x-amz-meta-ctime"] = "0";
         dummy_header["x-amz-meta-mtime"] = "0";
+        dummy_header["x-internal-meta-ctime"] = "0";
 
         for(s3obj_list_t::iterator reiter = notfound_param.notfound_list.begin(); reiter != notfound_param.notfound_list.end(); ++reiter){
             int dir_result;
