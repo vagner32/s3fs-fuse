@@ -1508,7 +1508,8 @@ static int rename_object(const char* from, const char* to, bool update_ctime)
     std::string strSourcePath        = (mount_prefix.empty() && 0 == strcmp("/", from)) ? "//" : from;
 
     if(update_ctime){
-        meta["x-amz-meta-ctime"]     = s3fs_str_realtime();
+        //meta["x-amz-meta-ctime"]     = s3fs_str_realtime();
+        printf("Teste NonUpdate ctime");
     }
     meta["x-amz-copy-source"]        = urlEncodePath(service_path + S3fsCred::GetBucket() + get_realpath(strSourcePath.c_str()));
     meta["Content-Type"]             = S3fsCurl::LookupMimeType(to);
@@ -3919,6 +3920,7 @@ static int s3fs_setxattr(const char* path, const char* name, const char* value, 
     updatemeta["x-amz-meta-ctime"]         = s3fs_str_realtime();
     updatemeta["x-amz-copy-source"]        = urlEncodePath(service_path + S3fsCred::GetBucket() + get_realpath(strSourcePath.c_str()));
     updatemeta["x-amz-metadata-directive"] = "REPLACE";
+    updatemeta["x-internal-meta-ctime"]         = s3fs_str_realtime();
 
     // check opened file handle.
     //
